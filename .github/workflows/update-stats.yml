@@ -31,9 +31,13 @@ jobs:
           total=$(jq '.total' /tmp/goatcounter.json)
 
           jq -n \
-            --argjson total "$total" \
-            '{total_lifetime_views: $total}' \
-            > _data/stats.json
+          --argjson total "$total" \
+          --arg updated_at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+          '{
+            total_lifetime_views: $total,
+            updated_at: $updated_at
+          }' \
+          > _data/stats.json
 
           cat _data/stats.json
 
