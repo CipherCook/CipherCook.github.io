@@ -1,5 +1,4 @@
 <div class="stats">
-
   <h2>Stats</h2>
 
   <ul>
@@ -8,21 +7,15 @@
     </li>
 
     <li>
-      Views: <span id="goatcounter-total"></span>
+      All time views: <span id="goatcounter-total">...</span>
     </li>
   </ul>
-
 </div>
 
 <script>
-  var t = setInterval(function() {
-    if (window.goatcounter && window.goatcounter.visit_count) {
-      clearInterval(t);
-
-      window.goatcounter.visit_count({
-        append: "#goatcounter-total",
-        path: "TOTAL"
-      });
-    }
-  }, 100);
+  fetch("https://ciphercook.goatcounter.com/counter/TOTAL.json")
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById("goatcounter-total").textContent = data.count;
+    });
 </script>
