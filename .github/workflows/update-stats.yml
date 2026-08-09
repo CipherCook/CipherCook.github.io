@@ -32,7 +32,7 @@ jobs:
 
           jq -n \
           --argjson total "$total" \
-          --arg updated_at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+          --arg updated_at "$(date -u '+%-d %b %Y, %H:%M UTC')" \
           '{
             total_lifetime_views: $total,
             updated_at: $updated_at
