@@ -7,15 +7,11 @@
     </li>
 
     <li>
-      All time views: <span id="goatcounter-total">...</span>
+      Views: {{ site.data.stats.total_lifetime_views }}
+    </li>
+    <li>
+      Views last updated:
+      {{ site.data.stats.updated_at | date: "%-d %b %Y, %H:%M" }}
     </li>
   </ul>
 </div>
-
-<script>
-  fetch("https://ciphercook.goatcounter.com/counter/TOTAL.json")
-    .then(response => response.json())
-    .then(data => {
-      document.getElementById("goatcounter-total").textContent = data.count;
-    });
-</script>

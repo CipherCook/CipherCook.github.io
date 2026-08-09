@@ -1,8 +1,53 @@
-- name: Test GoatCounter API
-  env:
-    GOATCOUNTER_API_KEY: ${{ secrets.GOATCOUNTER_API_KEY }}
-  run: |
-    curl --fail \
-      -u ":$GOATCOUNTER_API_KEY" \
-      -H "Content-Type: application/json" \
-      https://ciphercook.goatcounter.com/api/v0/stats/total
+name: Update blog stats
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-stats:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch GoatCounter stats
+        env:
+          GOATCOUNTER_API_KEY: ${{ secrets.GOATCOUNTER_API_KEY }}
+        run: |
+          mkdir -p _data
+
+          curl --fail --silent --show-error \
+            -u ":$GOATCOUNTER_API_KEY" \
+            -H "Content-Type: application/json" \
+            "https://ciphercook.goatcounter.com/api/v0/stats/total" \
+            > /tmp/goatcounter.json
+
+          total=$(jq '.total' /tmp/goatcounter.json)
+
+          jq -n \
+            --argjson total "$total" \
+            '{total_lifetime_views: $total}' \
+            > _data/stats.json
+
+          cat _data/stats.json
+
+      - name: Commit updated stats
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add _data/stats.json
+
+          if git diff --cached --quiet; then
+            echo "Stats have not changed."
+            exit 0
+          fi
+
+          git commit -m "Update blog stats"
+          git push
