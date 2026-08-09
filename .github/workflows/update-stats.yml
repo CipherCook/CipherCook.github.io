@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
 
       - name: Fetch GoatCounter stats
         env:
@@ -55,9 +57,3 @@ jobs:
 
           git commit -m "Update blog stats"
           git push
-
-      - name: Trigger Jekyll deployment
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh workflow run "Build Jekyll site" --ref main
