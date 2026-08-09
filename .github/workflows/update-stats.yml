@@ -1,18 +1,8 @@
-name: Update blog stats
-
-on:
-  workflow_dispatch:
-
-jobs:
-  update-stats:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Test GoatCounter API
-        env:
-          GOATCOUNTER_API_KEY: ${{ secrets.GOATCOUNTER_API_KEY }}
-        run: |
-          curl --fail \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Bearer $GOATCOUNTER_API_KEY" \
-            https://ciphercook.goatcounter.com/api/v0/stats/total
+- name: Test GoatCounter API
+  env:
+    GOATCOUNTER_API_KEY: ${{ secrets.GOATCOUNTER_API_KEY }}
+  run: |
+    curl --fail \
+      -u ":$GOATCOUNTER_API_KEY" \
+      -H "Content-Type: application/json" \
+      https://ciphercook.goatcounter.com/api/v0/stats/total
