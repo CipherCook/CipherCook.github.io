@@ -15,11 +15,10 @@
 </div>
 
 <script>
-  fetch("https://ciphercook.goatcounter.com/api/v0/stats/total")
+  fetch("https://ciphercook.goatcounter.com/counter/TOTAL.json")
     .then(response => response.json())
     .then(data => {
-      document.getElementById("goatcounter-views").textContent =
-        data.views;
+      document.getElementById("goatcounter-views").textContent = data.count;
     })
     .catch(() => {
       document.getElementById("goatcounter-views").textContent = "—";
