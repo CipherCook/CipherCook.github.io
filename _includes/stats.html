@@ -1,13 +1,27 @@
 <div class="stats">
+  <h2>Stats</h2>
 
-    <h2>Stats</h2>
-  
-    <ul>
-      <li>
-        Posts:
-        {{ site.posts.size }}
-      </li>
+  <ul>
+    <li>
+      Posts:
+      {{ site.posts.size }}
+    </li>
 
-    </ul>
-  
-  </div>
+    <li>
+      All time views:
+      <span id="goatcounter-views">Loading...</span>
+    </li>
+  </ul>
+</div>
+
+<script>
+  fetch("https://ciphercook.goatcounter.com/api/v0/stats/total")
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById("goatcounter-views").textContent =
+        data.views;
+    })
+    .catch(() => {
+      document.getElementById("goatcounter-views").textContent = "—";
+    });
+</script>
