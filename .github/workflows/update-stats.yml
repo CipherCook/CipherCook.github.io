@@ -18,15 +18,15 @@ jobs:
         with:
           token: ${{ secrets.GH_PAT }}
       
-      - - name: Check API key
-          env:
-            GOATCOUNTER_API_KEY: ${{ secrets.GOATCOUNTER_API_KEY }}
-          run: |
-            if [ -z "$GOATCOUNTER_API_KEY" ]; then
-              echo "API key is EMPTY"
-              exit 1
-            fi
-            echo "API key is present"
+      - name: Check API key
+        env:
+          GOATCOUNTER_API_KEY: ${{ secrets.GOATCOUNTER_API_KEY }}
+        run: |
+          if [ -z "$GOATCOUNTER_API_KEY" ]; then
+            echo "API key is EMPTY"
+            exit 1
+          fi
+          echo "API key is present"
 
       - name: Fetch GoatCounter stats
         env:
