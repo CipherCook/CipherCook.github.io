@@ -17,6 +17,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GH_PAT }}
+      
+      - - name: Check API key
+          env:
+            GOATCOUNTER_API_KEY: ${{ secrets.GOATCOUNTER_API_KEY }}
+          run: |
+            if [ -z "$GOATCOUNTER_API_KEY" ]; then
+              echo "API key is EMPTY"
+              exit 1
+            fi
+            echo "API key is present"
 
       - name: Fetch GoatCounter stats
         env:
@@ -33,15 +43,13 @@ jobs:
           total=$(jq '.total' /tmp/goatcounter.json)
 
           jq -n \
-          --argjson total "$total" \
-          --arg updated_at "$(date -u '+%-d %b %Y, %H:%M UTC')" \
-          '{
-            total_lifetime_views: $total,
-            updated_at: $updated_at
-          }' \
-          > _data/stats.json
-
-          cat _data/stats.json
+            --argjson total "$total" \
+            --arg updated_at "$(date -u '+%-d %b %Y, %H:%M UTC')" \
+            '{
+              total_lifetime_views: $total,
+              updated_at: $updated_at
+            }' \
+            > _data/stats.json
 
       - name: Commit updated stats
         run: |
