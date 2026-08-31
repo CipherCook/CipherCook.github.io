@@ -28,6 +28,18 @@ jobs:
           fi
           echo "API key is present"
 
+      - name: Debug GoatCounter request
+        env:
+          GOATCOUNTER_API_KEY: ${{ secrets.GOATCOUNTER_API_KEY }}
+        run: |
+          echo "Event: ${{ github.event_name }}"
+          echo "API key length: ${#GOATCOUNTER_API_KEY}"
+
+          curl -i \
+            -u ":$GOATCOUNTER_API_KEY" \
+            -H "Content-Type: application/json" \
+            "https://ciphercook.goatcounter.com/api/v0/stats/total?start=2026-07-01T00:00:00Z&end=$(date -u '+%Y-%m-%dT23:59:59Z')"
+
       - name: Fetch GoatCounter stats
         env:
           GOATCOUNTER_API_KEY: ${{ secrets.GOATCOUNTER_API_KEY }}
@@ -35,10 +47,10 @@ jobs:
           mkdir -p _data
 
           curl --fail --silent --show-error \
-            -u ":$GOATCOUNTER_API_KEY" \
-            -H "Content-Type: application/json" \
-            "https://ciphercook.goatcounter.com/api/v0/stats/total" \
-            > /tmp/goatcounter.json
+          -u ":$GOATCOUNTER_API_KEY" \
+          -H "Content-Type: application/json" \
+          "https://ciphercook.goatcounter.com/api/v0/stats/total?start=2026-07-01T00:00:00Z&end=$(date -u '+%Y-%m-%dT23:59:59Z')" \
+          > /tmp/goatcounter.json
 
           total=$(jq '.total' /tmp/goatcounter.json)
 
